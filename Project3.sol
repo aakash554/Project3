@@ -1,21 +1,42 @@
 // SPDX-License-Identifier: MIT
 pragma solidity 0.8.7;
-contract demo{
-    // Function using require
-    function divide1 (int a,int b)public pure returns (int) {
-        require(b!=0,"B cannot be zero");
-        return a/b;
+contract MyToken {
+    // public variables here
+    string public Currency = "INR";
+    address public owner;
+
+    // mapping variable here
+    mapping (address => uint ) public Available;
+
+    // Making Owner 
+    constructor(){
+        owner=msg.sender;
     }
-    // Function using revert
-    function divide2 (int a,int b)public pure returns (int) {
-        if(b==0){
-            revert("B cannot be zero");
+
+    // mint function
+
+    function Deposit(uint money) public{
+        require(money>0,"Deposit Should be greater than Zero");
+        Available[owner] += money;
+    }
+
+    // burn function
+    function Withdraw(uint money) public{
+        if(money>Available[owner]){
+            revert("Withdrawl Balance must be greater than Available balance");
         }
-        return a/b;
+        Available[owner] -= money;
+        
     }
-    // Function using assert
-    function divide3 (int a,int b)public pure returns (int) {
-        assert(b!=0);
-        return a/b;
+    // Transfer Function
+    function transfer(address addres,uint amount)public {
+        assert(amount<Available[owner]);
+        Available[addres] += amount;
+        Available[owner] -= amount;
+    }
+
+    // Balance function
+    function Balance(address addres) public view returns (uint){
+        return Available[addres];
     }
 }
