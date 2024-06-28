@@ -13,14 +13,13 @@ contract MyToken {
         owner=msg.sender;
     }
 
-    // mint function
-
+    // Deposit function
     function Deposit(uint money) public{
         require(money>0,"Deposit Should be greater than Zero");
         Available[owner] += money;
     }
 
-    // burn function
+    // Withdraw function
     function Withdraw(uint money) public{
         if(money>Available[owner]){
             revert("Withdrawl Balance must be greater than Available balance");
