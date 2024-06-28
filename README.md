@@ -1,67 +1,51 @@
 # Project 3
 
-## Overview
+# MyToken Smart Contract: Understanding Error Handling
 
-The demo contract implements basic arithmetic functions for dividing two integers using different error handling mechanisms in Solidity. It includes functionalities to perform division while ensuring that the divisor is not zero, using require, revert, and assert statements. This contract can be deployed and tested using Remix, an online Solidity IDE. To get started, go to the Remix website.
+This document explains the use of `require`, `assert`, and `revert` in the MyToken smart contract.
 
-## Contract Details
+## Error Handling in Solidity
 
-- **Contract Name:** Demo
-  
-## Functions
+Solidity provides three functions for error handling: `require`, `assert`, and `revert`. Each serves a specific purpose in ensuring contract integrity and proper execution.
 
-### divide1
-This function performs division of two integers and uses the `require` statement to ensure that the divisor is not zero.
+### 1. require()
 
-**Parameters:**
-- `int a`: The dividend.
-- `int b`: The divisor.
+`require()` is used for input validation and checking conditions that should be met for the function to proceed.
 
-**Returns:**
-- `int`: The result of the division.
-  
-**Usage:**
+#### Usage in MyToken:
+
 ```solidity
-function divide1 (int a,int b)public pure returns (int)  {
-        require(b!=0,"B cannot be zero");
-        return a/b;
-    }
+function Deposit(uint money) public {
+    require(money > 0, "Deposit Should be greater than Zero");
+    Available[owner] += money;
+}
 ```
-### divide2
-This function performs division of two integers and uses the `revert` statement to ensure that the divisor is not zero.
+### 2. revert()
 
-**Parameters:**
-- `int a`: The dividend.
-- `int b`: The divisor.
+`revert()` is used to flag an error and revert the current call. It can provide a reason for the revert.
 
-**Returns:**
-- `int`: The result of the division.
-  
-**Usage:**
+### Usage in MyTokens
+
 ```solidity
-function divide2 (int a,int b)public pure returns (int) {
-        if(b==0){
-            revert("B cannot be zero");
-        }
-        return a/b;
+function Withdraw(uint money) public {
+    if(money > Available[owner]) {
+        revert("Withdrawl Balance must be greater than Available balance");
     }
+    Available[owner] -= money;
+}
 ```
-### divide3
-This function performs division of two integers and uses the `assert` statement to ensure that the divisor is not zero.
+### 3. assert()
 
-**Parameters:**
-- `int a`: The dividend.
-- `int b`: The divisor.
+`assert()` is used to check for internal errors and invariants. It should only fail in case of a bug in the code.
 
-**Returns:**
-- `int`: The result of the division.
-  
-**Usage:**
+### Usage in MyTokens
+
 ```solidity
-function divide3 (int a,int b)public pure returns (int) {
-        assert(b!=0);
-        return a/b;
-    }
+function transfer(address addres, uint amount) public {
+    assert(amount < Available[owner]);
+    Available[addres] += amount;
+    Available[owner] -= amount;
+}
 ```
 
 ## Authors
